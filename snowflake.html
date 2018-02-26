@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Cache-Control" content="no-cache"/>
+        
+        <script>
+
+            function drawSnowfalke(context, x1, y1, x2, y2, n, i) {
+                if (n === 0) {
+                    context.beginPath();
+                    context.moveTo(x1, y1);
+                    context.lineTo(x2, y2);
+                    context.stroke();
+                }
+                else {
+                    /*      C
+                           / \
+                      A--B     D---E
+                    */
+                    //треть отрезка (точка B)
+                    var xb = x1 + (x2 - x1)*1/3;
+                    var yb = y1 + (y2 - y1)*1/3;
+                    //две трети отрезка (точка D)
+                    var xd = x1 + (x2 - x1)*2/3;
+                    var yd = y1 + (y2 - y1)*2/3;
+
+                    if (!i){
+                        var xc = (xb + xd + (yb- yd)*Math.sqrt(3))/2;
+                        var yc = (yb + yd + (xd - xb)*Math.sqrt(3))/2; 
+                    }
+                    else {
+                        var xc = (xb + xd - (yb- yd)*Math.sqrt(3))/2;
+                        var yc = (yb + yd - (xd - xb)*Math.sqrt(3))/2; 
+                    }        
+                    drawSnowfalke(context, x1, y1, xb, yb, n-1, i);
+                    drawSnowfalke(context, xb, yb, xc, yc, n-1, i);
+                    drawSnowfalke(context, xc, yc, xd, yd, n-1, i);
+                    drawSnowfalke(context, xd, yd, x2, y2, n-1, i);
+                }
+            }
+
+                function run() {
+                var canvas = document.getElementById("canvas");
+                var canvasHeight = parseInt(canvas.getAttribute("height"));
+                var canvasWidth = parseInt(canvas.getAttribute("width"));
+                var context = canvas.getContext('2d');
+                context.lineWidth = "1";
+                context.strokeStyle = "blue";
+                var x1 = 100;
+                var y1 = 350;
+                var x3 = 500;
+                var y3 = 350;
+                var n = 4;
+                var x2 = (x1 + x3 - (y1- y3)*Math.sqrt(3))/2;
+                var y2 = (y1 + y3 - (x3 - x1)*Math.sqrt(3))/2;
+
+                drawSnowfalke(context, x1, y1, x3, y3, n, 0);
+                drawSnowfalke(context, x1, y1, x2, y2, n, 1);
+                drawSnowfalke(context, x2, y2, x3, y3, n, 1);
+            }          
+        </script>  
+    </head> 
+    <body onload="run()">
+          <canvas height='1000' width='1000' id='canvas'></canvas>
+    </body>
+</html>
