@@ -1,0 +1,50 @@
+<!doctype html>	 
+<html>	
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache"/>
+	
+	<script>
+		function main() {
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext('2d');
+			context.lineWidth = "1";
+			context.strokeStyle = "#000000";
+			fractal(context, { x: 505, y: 200 }, { x: 5, y: 200 }, 10);
+			fractal(context, { x: 5, y: 200 }, { x: 255, y: 200 + Math.sqrt(3)* 500/2 }, 10);
+			fractal(context, { x: 255, y: 200 + Math.sqrt(3)* 500/2 }, { x: 505, y: 200 }, 10);
+		}	
+
+		function fractal(context, sPoint, fPoint, count) {
+			if (count === 0) {
+				drawLineOn(context, sPoint, fPoint);
+				return;
+			}
+			var firstPoint = { x: sPoint.x + (fPoint.x - sPoint.x) / 3, y: sPoint.y + (fPoint.y - sPoint.y) / 3 };
+			var secondPoint = { x: sPoint.x + 2 * (fPoint.x - sPoint.x) / 3, y: sPoint.y + 2 * (fPoint.y - sPoint.y) / 3 }
+			var vector = { x: secondPoint.x - firstPoint.x, y: secondPoint.y - firstPoint.y };
+			var angle = Math.atan2(vector.y, vector.x) + Math.PI / 3;
+			var length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+			var middlePoint = getCartesianPoint(firstPoint, length, angle);
+			fractal(context, sPoint, firstPoint, count - 1);
+			fractal(context, firstPoint, middlePoint, count - 1);
+			fractal(context, middlePoint, secondPoint, count - 1);
+			fractal(context, secondPoint, fPoint, count - 1);
+		}
+
+		function getCartesianPoint(center, length, angle) {
+			return { x: center.x + (length * Math.cos(angle)), y: center.y + (length * Math.sin(angle)) };
+		}
+
+		function drawLineOn(canvasContext, sPoint, fPoint) {
+			canvasContext.beginPath();
+			canvasContext.moveTo(sPoint.x, sPoint.y);
+			canvasContext.lineTo(fPoint.x, fPoint.y);
+			canvasContext.stroke();
+		}
+	</script>
+</head>
+<body onload="main()">
+<canvas height='2000' width='2000' id='canvas'></canvas>
+</body>
+</html>
