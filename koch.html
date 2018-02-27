@@ -3,19 +3,47 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-cache"/>
-	
+	<style>
+		#slider {
+  			margin: 20px;
+		}
+	</style>
+	<script src ="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script>
+
+		var size = 500;
+		var count = 10;
+
+		$(document).ready(function () {
+			$("#slider").slider(
+			{
+				min: 0,
+				max: 1000,
+				step: 1,
+				change: changeSize()
+			});
+		});
+
+		function changeSize(event, ui){
+		  size = ui.value;
+		  main();
+		}
+
+		function changeCount(event, ui){
+			count = ui.value;
+			main();
+		}
+
 		function main() {
 			var context = getDefaultCanvasContext();
-			var size = 500;
 			var triangleHeight = Math.sqrt(3) * size / 2;
 			var center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 			var point1 = { x: center.x + size / 2, y: center.y - triangleHeight / 2 };
 			var point2 = { x: center.x - size / 2, y: center.y - triangleHeight / 2 };
 			var point3 = { x: center.x, y: center.y + triangleHeight / 2 };
-			fractal(context, point1, point2, 10);
-			fractal(context, point2, point3, 10);
-			fractal(context, point3, point1, 10);
+			fractal(context, point1, point2, count);
+			fractal(context, point2, point3, count);
+			fractal(context, point3, point1, count);
 		}	
 
 		function getDefaultCanvasContext(){
@@ -25,6 +53,7 @@
 			var context = canvas.getContext('2d');
 			context.lineWidth = "1";
 			context.strokeStyle = "#000000";
+			context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 			return context;
 		}
 
@@ -62,6 +91,7 @@
 	</script>
 </head>
 <body onload="main()">
-<canvas height='2000' width='2000' id='canvas'></canvas>
+	<div id="slider"></div>
+	<canvas height='2000' width='2000' id='canvas'></canvas>
 </body>
 </html>
