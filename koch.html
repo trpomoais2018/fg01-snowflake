@@ -6,14 +6,27 @@
 	
 	<script>
 		function main() {
+			var context = getDefaultCanvasContext();
+			var size = 500;
+			var triangleHeight = Math.sqrt(3) * size / 2;
+			var center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+			var point1 = { x: center.x + size / 2, y: center.y - triangleHeight / 2 };
+			var point2 = { x: center.x - size / 2, y: center.y - triangleHeight / 2 };
+			var point3 = { x: center.x, y: center.y + triangleHeight / 2 };
+			fractal(context, point1, point2, 10);
+			fractal(context, point2, point3, 10);
+			fractal(context, point3, point1, 10);
+		}	
+
+		function getDefaultCanvasContext(){
 			var canvas = document.getElementById("canvas");
+			canvas.setAttribute("Width", window.innerWidth);
+			canvas.setAttribute("Height", window.innerHeight);
 			var context = canvas.getContext('2d');
 			context.lineWidth = "1";
 			context.strokeStyle = "#000000";
-			fractal(context, { x: 505, y: 200 }, { x: 5, y: 200 }, 10);
-			fractal(context, { x: 5, y: 200 }, { x: 255, y: 200 + Math.sqrt(3)* 500/2 }, 10);
-			fractal(context, { x: 255, y: 200 + Math.sqrt(3)* 500/2 }, { x: 505, y: 200 }, 10);
-		}	
+			return context;
+		}
 
 		function fractal(context, sPoint, fPoint, count) {
 			if (count === 0) {
@@ -22,14 +35,18 @@
 			}
 			var firstPoint = { x: sPoint.x + (fPoint.x - sPoint.x) / 3, y: sPoint.y + (fPoint.y - sPoint.y) / 3 };
 			var secondPoint = { x: sPoint.x + 2 * (fPoint.x - sPoint.x) / 3, y: sPoint.y + 2 * (fPoint.y - sPoint.y) / 3 }
-			var vector = { x: secondPoint.x - firstPoint.x, y: secondPoint.y - firstPoint.y };
-			var angle = Math.atan2(vector.y, vector.x) + Math.PI / 3;
-			var length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-			var middlePoint = getCartesianPoint(firstPoint, length, angle);
+			var middlePoint = findMiddlePoint(firstPoint, secondPoint);
 			fractal(context, sPoint, firstPoint, count - 1);
 			fractal(context, firstPoint, middlePoint, count - 1);
 			fractal(context, middlePoint, secondPoint, count - 1);
 			fractal(context, secondPoint, fPoint, count - 1);
+		}
+
+		function findMiddlePoint(sPoint, fPoint){
+			var vector = { x: fPoint.x - sPoint.x, y: fPoint.y - sPoint.y };
+			var angle = Math.atan2(vector.y, vector.x) + Math.PI / 3;
+			var length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+			return getCartesianPoint(sPoint, length, angle);
 		}
 
 		function getCartesianPoint(center, length, angle) {
