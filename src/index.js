@@ -1,7 +1,6 @@
 import React from 'react'
 import {render} from 'react-dom'
-import RecursionDepthSlider from './components/RecursionDepthSlider'
-import DrawingBox from "./components/DrawingBox";
+import FractalApp from './components/FractalApp';
 
-render(<RecursionDepthSlider/>, document.getElementById('slider'));
-render(<DrawingBox size={500}/>, document.getElementById('canvas'));
+
+render(<FractalApp/>, document.getElementById('root'))

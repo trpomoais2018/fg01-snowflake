@@ -1,6 +1,3 @@
-'use strict'
-
-
 /** Represents simple L-System */
 export default class LSystem {
     /**
@@ -25,12 +22,12 @@ export default class LSystem {
             return this.axiom;
 
         let result = [];
-        this.getOutput(depth - 1).forEach(symbol => {
+        for (let symbol of this.getOutput(depth-1)){
             if (symbol === this.rule.symbol)
                 this.rule.replacement.forEach(s => result.push(s));
             else
                 result.push(symbol);
-        });
+        }
         return result;
     }
 }
