@@ -8,25 +8,34 @@
   			margin: 20px;
 		}
 	</style>
-	<script src ="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script>
 
 		var size = 500;
 		var count = 10;
 
 		$(document).ready(function () {
-			$("#slider").slider(
+			$("#sizer").slider(
+			{
+				min: 100,
+				max: 1000,
+				step: 10,
+				change: changeSize
+			});
+			$("#counter").slider(
 			{
 				min: 0,
-				max: 1000,
+				max: 10,
 				step: 1,
-				change: changeSize()
+				change: changeCount
 			});
 		});
 
 		function changeSize(event, ui){
-		  size = ui.value;
-		  main();
+		  	size = ui.value;
+		  	main();
 		}
 
 		function changeCount(event, ui){
@@ -91,7 +100,8 @@
 	</script>
 </head>
 <body onload="main()">
-	<div id="slider"></div>
+	<div id="sizer"></div>
+	<div id="counter"></div>
 	<canvas height='2000' width='2000' id='canvas'></canvas>
 </body>
 </html>
