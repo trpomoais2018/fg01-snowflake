@@ -14,20 +14,22 @@
 	<script>
 
 		var size = 500;
-		var count = 10;
+		var count = 5;
 
 		$(document).ready(function () {
 			$("#sizer").slider(
 			{
 				min: 100,
 				max: 1000,
+				value: 500,
 				step: 10,
 				change: changeSize
 			});
 			$("#counter").slider(
 			{
 				min: 0,
-				max: 10,
+				max: 8,
+				value: 5,
 				step: 1,
 				change: changeCount
 			});
@@ -100,7 +102,9 @@
 	</script>
 </head>
 <body onload="main()">
+	Size
 	<div id="sizer"></div>
+	Count
 	<div id="counter"></div>
 	<canvas height='2000' width='2000' id='canvas'></canvas>
 </body>
