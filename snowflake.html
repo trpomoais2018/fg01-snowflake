@@ -1,0 +1,73 @@
+<!doctype html>
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<meta http-equiv="Cache-Control" content="no-cache" />
+			 n = <input type="number" max="10" min="0" value=0 id="n"><br>
+			 point 1 = x : <input type="number" max="500" min="0" value=100 id="p1x"> y : <input type="number" max="400" min="0" value=100 id="p1y"><br>
+			 point 2 = x : <input type="number" max="500" min="0" value=400 id="p2x"> y : <input type="number" max="400" min="0" value=100 id="p2y"><br>
+			 point 3 = x : <input type="number" max="500" min="0" value=250 id="p3x"> y : <input type="number" max="400" min="0" value=346.41016 id="p3y"><br>
+			 <button onclick="run()">OK </button> <br> 
+
+            <script>
+		function createCochSnowflake(p1,p2,p3,n) {						    
+		    fractLine(p1,p2,n);
+			fractLine(p2,p3,n);
+			fractLine(p3,p1,n);										
+		}
+
+
+		function fractLine(p1,p2,n){
+			if(n===0) { 
+				drawLine(p1,p2);
+				} else { 
+					var angle = Math.atan2(p2.y - p1.y,p2.x - p1.x); 
+				    var l = Math.sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y)); 
+					var p3 =  { 
+						x : p1.x + l * Math.cos(angle) / 3,
+						y : p1.y + l * Math.sin(angle) / 3 };
+				    var p4 =  {
+						 x : p3.x + l * Math.cos(angle - Math.PI / 3) / 3 ,
+						 y : p3.y + l * Math.sin(angle - Math.PI / 3) / 3 };
+					var p5 =  { 
+						x : p1.x + 2 * l * Math.cos(angle) / 3,
+					    y : p1.y + 2 * l * Math.sin(angle) / 3 };
+					fractLine(p1,p3,n-1); 
+					fractLine(p3,p4,n-1); 
+					fractLine(p4,p5,n-1); 
+					fractLine(p5,p2,n-1);    
+		}
+}
+		function run () {	
+		    context = createContext();
+			context.clearRect(0, 0, canvas.width, canvas.height);	
+			x = {x : parseInt(document.getElementById("p1x").value), y : parseInt(document.getElementById("p1y").value)};			
+			y = {x : parseInt(document.getElementById("p2x").value), y : parseInt(document.getElementById("p2y").value)};
+			z = {x : parseInt(document.getElementById("p3x").value), y : parseInt(document.getElementById("p3y").value)};
+		    n = parseInt(document.getElementById("n").value);	
+            createCochSnowflake(x,y,z,n);
+		}
+
+		function createContext(){
+			canvas = document.getElementById("canvas");
+			canvas.style.width = window.innerWidth + 'px';
+			canvas.style.height = window.innerHeight + 'px';
+			context = canvas.getContext('2d');
+			context.lineWidth = "1.5";
+			context.strokeStyle = "black";
+			return context;
+		}
+
+		function drawLine(p1,p2){		
+			context.beginPath();	
+			context.moveTo(p1.x,p1.y); 
+			context.lineTo(p2.x,p2.y); 
+			context.stroke();
+		}
+
+	</script>
+
+            <body onload="run()">
+                <canvas height='400' width='500' id='canvas'></canvas>
+			</body>
+</html>
