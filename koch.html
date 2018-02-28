@@ -3,11 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-cache"/>
-	<style>
-		#slider {
-  			margin: 20px;
-		}
-	</style>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -21,16 +16,18 @@
 			{
 				min: 100,
 				max: 1000,
-				value: 500,
+				value: size,
 				step: 10,
+				slide: changeSize,
 				change: changeSize
 			});
 			$("#counter").slider(
 			{
 				min: 0,
-				max: 8,
-				value: 5,
+				max: 7,
+				value: count,
 				step: 1,
+				slide: changeCount,
 				change: changeCount
 			});
 		});
@@ -52,6 +49,10 @@
 			var point1 = { x: center.x + size / 2, y: center.y - triangleHeight / 2 };
 			var point2 = { x: center.x - size / 2, y: center.y - triangleHeight / 2 };
 			var point3 = { x: center.x, y: center.y + triangleHeight / 2 };
+			drawKochSnowflake(context, point1, point2, point3, count);
+		}
+
+		function drawKochSnowflake(context, point1, point2, point3, count){
 			fractal(context, point1, point2, count);
 			fractal(context, point2, point3, count);
 			fractal(context, point3, point1, count);
