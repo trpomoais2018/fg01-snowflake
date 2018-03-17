@@ -4,15 +4,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Cache-Control" content="no-cache"/>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script>
 		var size = 500;
-        var count = 5;
+		var count = 5;
 
 		$(document).ready(function () {
-			$("#sizer").slider(
-			{
+			$("#sizer").slider( {
 				min: 100,
 				max: 1000,
 				value: size,
@@ -20,8 +19,7 @@
 				slide: changeSize,
 				change: changeSize
 			});
-			$("#counter").slider(
-			{
+			$("#counter").slider( {
 				min: 0,
 				max: 7,
 				value: count,
@@ -29,77 +27,80 @@
 				slide: changeCount,
 				change: changeCount
 			});
-        });
+		});
 
-		function changeSize(event, ui){
+		function changeSize(event, ui) {
 		  	size = ui.value;
 			$("#sizeUpdate").html(size);
 		  	main();
-        }
+		}
 
-		function changeCount(event, ui){
+		function changeCount(event, ui) {
 			count = ui.value;
 			$("#countUpdate").html(count);
 			main();
-        }
+		}
 
 		function main() {
 			setDefaultValues();
-			var context = getDefaultCanvasContext();
-			var triangleHeight = Math.sqrt(3) * size / 2;
-			var center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-			var point1 = { x: center.x + size / 2, y: center.y - triangleHeight / 2 };
-			var point2 = { x: center.x - size / 2, y: center.y - triangleHeight / 2 };
-			var point3 = { x: center.x, y: center.y + triangleHeight / 2 };
+			const context = getDefaultCanvasContext();
+			const triangleHeight = Math.sqrt(3) * size / 2;
+			const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+			const point1 = { x: center.x + size / 2, y: center.y - triangleHeight / 2 };
+			const point2 = { x: center.x - size / 2, y: center.y - triangleHeight / 2 };
+			const point3 = { x: center.x, y: center.y + triangleHeight / 2 };
 			drawKochSnowflake(context, point1, point2, point3, count);
-        }
+		}
 
-		function drawKochSnowflake(context, point1, point2, point3, count){
-			fractal(context, point1, point2, count);
-			fractal(context, point2, point3, count);
-			fractal(context, point3, point1, count);
-        }	
+		function drawKochSnowflake(context, point1, point2, point3, count) {
+			drawFractal(context, point1, point2, count);
+			drawFractal(context, point2, point3, count);
+			drawFractal(context, point3, point1, count);
+		}	
 
 		function setDefaultValues(){
 			$("#sizeUpdate").html(size);
 			$("#countUpdate").html(count);
 		}
 		
-		function getDefaultCanvasContext(){
-			var canvas = document.getElementById("canvas");
+		function getDefaultCanvasContext() {
+			const canvas = document.getElementById("canvas");
 			canvas.setAttribute("Width", window.innerWidth);
 			canvas.setAttribute("Height", window.innerHeight);
-			var context = canvas.getContext('2d');
+			const context = canvas.getContext('2d');
 			context.lineWidth = "1";
 			context.strokeStyle = "#000000";
 			context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 			return context;
-        }
+		}
 
-		function fractal(context, sPoint, fPoint, count) {
+		function drawFractal(context, startPoint, finishPoint, count) {
 			if (count === 0) {
-				drawLineOn(context, sPoint, fPoint);
+				drawLineOn(context, startPoint, finishPoint);
 				return;
 			}
-			var firstPoint = { x: sPoint.x + (fPoint.x - sPoint.x) / 3, y: sPoint.y + (fPoint.y - sPoint.y) / 3 };
-			var secondPoint = { x: sPoint.x + 2 * (fPoint.x - sPoint.x) / 3, y: sPoint.y + 2 * (fPoint.y - sPoint.y) / 3 }
-			var middlePoint = findMiddlePoint(firstPoint, secondPoint);
-			fractal(context, sPoint, firstPoint, count - 1);
-			fractal(context, firstPoint, middlePoint, count - 1);
-			fractal(context, middlePoint, secondPoint, count - 1);
-			fractal(context, secondPoint, fPoint, count - 1);
-        }
+			const firstPoint = { x: startPoint.x + (finishPoint.x - startPoint.x) / 3, y: startPoint.y + (finishPoint.y - startPoint.y) / 3 };
+			const secondPoint = { x: startPoint.x + 2 * (finishPoint.x - startPoint.x) / 3, y: startPoint.y + 2 * (finishPoint.y - startPoint.y) / 3 }
+			const middlePoint = findMiddlePoint(firstPoint, secondPoint);
+			drawFractal(context, startPoint, firstPoint, count - 1);
+			drawFractal(context, firstPoint, middlePoint, count - 1);
+			drawFractal(context, middlePoint, secondPoint, count - 1);
+			drawFractal(context, secondPoint, finishPoint, count - 1);
+		}
 
-		function findMiddlePoint(sPoint, fPoint){
-			var vector = { x: fPoint.x - sPoint.x, y: fPoint.y - sPoint.y };
-			var angle = Math.atan2(vector.y, vector.x) + Math.PI / 3;
-			var length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-			return getCartesianPoint(sPoint, length, angle);
-        }
+		function findMiddlePoint(startPoint, finishPoint) {
+			const vector = { x: finishPoint.x - startPoint.x, y: finishPoint.y - startPoint.y };
+			const angle = Math.atan2(vector.y, vector.x) + Math.PI / 3;
+			const length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+			return getCartesianPoint(startPoint, length, angle);
+		}
 
 		function getCartesianPoint(center, length, angle) {
-			return { x: center.x + (length * Math.cos(angle)), y: center.y + (length * Math.sin(angle)) };
-        }
+			return { 
+				x: center.x + (length * Math.cos(angle)), 
+				y: center.y + (length * Math.sin(angle)) 
+			};
+		}
 
 		function drawLineOn(canvasContext, sPoint, fPoint) {
 			canvasContext.beginPath();
