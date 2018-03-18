@@ -98,12 +98,14 @@
 		//снежинка Коха
 		function KochSnowflake() {
 			var canvas = document.getElementById("canvas4");
-			var points = [{ x: 20, y: 50 }, { x: 120, y: 50 }, { x: 120, y: 100 }];
+			var points = [];
 			var input = prompt('введите координаты 3-х точек ( не больше 200 (50 140 190 140 120 19)):', ).split(' ');
 			var count = prompt(' введите глубину рекурсии :', );
 			for (var i = 0; i < (input.length / 2); i++) {
-				points[i].x = input[i + i];
-				points[i].y = input[i + i + 1];
+				points[i] = {
+					x: input[i + i],
+					y: input[i + i + 1]
+				}
 			}
 			function rand(count) {
 				return Math.floor(count * Math.random());
@@ -111,7 +113,7 @@
 			var deg = Math.PI / 180;
 			var context = canvas.getContext('2d');
 			var angle = 0;
-			var strokes = ["#6cf", "#9cf", "#99f", "#ccf", "#66f", "#3cf","#ff33cc","#ff3366", "#33ff66"];
+			var strokes = ["#6cf", "#9cf", "#99f", "#ccf", "#66f", "#3cf", "#ff33cc", "#ff3366", "#33ff66"];
 			var stroke = strokes[rand(strokes.length)];
 			var fill = 'transparent';
 			var length = Math.sqrt(Math.pow((points[0].x - points[1].x), 2) + Math.pow((points[0].y - points[1].y), 2));
