@@ -1,0 +1,120 @@
+<!doctype html>	 
+<html>	
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache"/>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		var size = 500;
+		var count = 5;
+
+		$(document).ready(function () {
+			$("#sizer").slider( {
+				min: 100,
+				max: 1000,
+				value: size,
+				step: 10,
+				slide: changeSize,
+				change: changeSize
+			});
+			$("#counter").slider( {
+				min: 0,
+				max: 7,
+				value: count,
+				step: 1,
+				slide: changeCount,
+				change: changeCount
+			});
+		});
+
+		function changeSize(event, ui) {
+		  	size = ui.value;
+			$("#sizeUpdate").html(size);
+		  	main();
+		}
+
+		function changeCount(event, ui) {
+			count = ui.value;
+			$("#countUpdate").html(count);
+			main();
+		}
+
+		function main() {
+			setDefaultValues();
+			const context = getDefaultCanvasContext();
+			const triangleHeight = Math.sqrt(3) * size / 2;
+			const center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+			const point1 = { x: center.x + size / 2, y: center.y - triangleHeight / 2 };
+			const point2 = { x: center.x - size / 2, y: center.y - triangleHeight / 2 };
+			const point3 = { x: center.x, y: center.y + triangleHeight / 2 };
+			drawKochSnowflake(context, point1, point2, point3, count);
+		}
+
+		function drawKochSnowflake(context, point1, point2, point3, count) {
+			drawFractal(context, point1, point2, count);
+			drawFractal(context, point2, point3, count);
+			drawFractal(context, point3, point1, count);
+		}	
+
+		function setDefaultValues(){
+			$("#sizeUpdate").html(size);
+			$("#countUpdate").html(count);
+		}
+		
+		function getDefaultCanvasContext() {
+			const canvas = document.getElementById("canvas");
+			canvas.setAttribute("Width", window.innerWidth);
+			canvas.setAttribute("Height", window.innerHeight);
+			const context = canvas.getContext('2d');
+			context.lineWidth = "1";
+			context.strokeStyle = "#000000";
+			context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+			return context;
+		}
+
+		function drawFractal(context, startPoint, finishPoint, count) {
+			if (count === 0) {
+				drawLineOn(context, startPoint, finishPoint);
+				return;
+			}
+			const firstPoint = { x: startPoint.x + (finishPoint.x - startPoint.x) / 3, y: startPoint.y + (finishPoint.y - startPoint.y) / 3 };
+			const secondPoint = { x: startPoint.x + 2 * (finishPoint.x - startPoint.x) / 3, y: startPoint.y + 2 * (finishPoint.y - startPoint.y) / 3 }
+			const middlePoint = findMiddlePoint(firstPoint, secondPoint);
+			drawFractal(context, startPoint, firstPoint, count - 1);
+			drawFractal(context, firstPoint, middlePoint, count - 1);
+			drawFractal(context, middlePoint, secondPoint, count - 1);
+			drawFractal(context, secondPoint, finishPoint, count - 1);
+		}
+
+		function findMiddlePoint(startPoint, finishPoint) {
+			const vector = { x: finishPoint.x - startPoint.x, y: finishPoint.y - startPoint.y };
+			const angle = Math.atan2(vector.y, vector.x) + Math.PI / 3;
+			const length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+			return getCartesianPoint(startPoint, length, angle);
+		}
+
+		function getCartesianPoint(center, length, angle) {
+			return { 
+				x: center.x + (length * Math.cos(angle)), 
+				y: center.y + (length * Math.sin(angle)) 
+			};
+		}
+
+		function drawLineOn(canvasContext, sPoint, fPoint) {
+			canvasContext.beginPath();
+			canvasContext.moveTo(sPoint.x, sPoint.y);
+			canvasContext.lineTo(fPoint.x, fPoint.y);
+			canvasContext.stroke();
+		}
+	</script>
+</head>
+<body onload="main()" style="overflow: hidden">
+	Size: <span id="sizeUpdate">0</span>
+	<div id="sizer"></div>
+	Count: <span id="countUpdate">0</span>
+	<div id="counter"></div>
+	<canvas height='2000' width='2000' id='canvas'></canvas>
+</body>
+</html>
