@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <script>
+        function main() {
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            var p1 = { x: 225, y: 225},
+                p2 = { x: 300, y: 100},
+                p3 = { x: 375, y: 225 };
+            var n = 5;
+            drawFlake(context, p1, p2, n);
+            drawFlake(context, p2, p3, n);
+            drawFlake(context, p3, p1, n);
+        }  
+
+        function drawFlake(context, start, end, n) {
+            if (n === 0) {
+                context.beginPath();
+                context.moveTo(start.x, start.y);
+                context.lineTo(end.x, end.y);
+                context.stroke();
+            }
+            else {
+                var x = end.x - start.x,
+                    y = end.y - start.y;
+                var length = Math.sqrt(x * x + y * y);
+                var angle = Math.atan2(y, x);
+                var p1 = { x: start.x + x / 3, y: start.y + y / 3 },
+                    p2 = { x: start.x + 2 * x / 3, y: start.y + 2 * y / 3 },
+                    p3 = { x: p1.x + Math.cos(angle - Math.PI / 3) * length / 3, y: p1.y + Math.sin(angle - Math.PI / 3) * length / 3 };
+                drawFlake(context, start, p1, n - 1);
+                drawFlake(context, p1, p3, n - 1);
+                drawFlake(context, p3, p2, n - 1);
+                drawFlake(context, p2, end, n - 1);
+            }
+        }
+    </script>
+    <body onload="main()">
+        <canvas id='canvas'></canvas>
+    </body>
+</html>
