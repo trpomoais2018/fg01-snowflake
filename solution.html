@@ -1,53 +1,56 @@
 <!doctype html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="Cache-Control" content="no-cache"/>
-	
-	<script>
-        function drawKochSnowflake(p1,p2,n) {
-            if(n===0) {
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+
+    <script>
+        function drawKochSnowflake(p1, p2, n) {
+            let canvas = document.getElementById("canvas");
+            let canvasHeight = parseInt(canvas.getAttribute("height"));
+            let canvasWidth = parseInt(canvas.getAttribute("width"));
+            let context = canvas.getContext('2d');
+            context.lineWidth = "1";
+            context.strokeStyle = "0000FF";
+            if (n === 0) {
                 context.beginPath();
-                context.moveTo(p1.x,p1.y);
-            	context.lineTo(p2.x,p2.y);
+                context.moveTo(p1.x, p1.y);
+                context.lineTo(p2.x, p2.y);
                 context.stroke();
             } else {
-                var alpha=Math.atan2(p2.y-p1.y,p2.x-p1.x);
-                var l=Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
+                let alpha = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+                let l = Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
 
-                var p3={
-                    x: p1.x+l*Math.cos(alpha)/3,
-                    y: p1.y+l*Math.sin(alpha)/3};
-                var p4={x:p3.x+l*Math.cos(alpha-Math.PI/3)/3,y:p3.y+l*Math.sin(alpha-Math.PI/3)/3};
-                var p5={x:p1.x+2*l*Math.cos(alpha)/3,y:p1.y+2*l*Math.sin(alpha)/3};
-
-                drawKochSnowflake(p1,p3,n-1);
-                drawKochSnowflake(p3,p4,n-1);
-                drawKochSnowflake(p4,p5,n-1);
-                drawKochSnowflake(p5,p2,n-1);
+                let p3 = {
+                    x: p1.x + l * Math.cos(alpha) / 3,
+                    y: p1.y + l * Math.sin(alpha) / 3
+                };
+                let p4 = {
+                    x: p3.x + l * Math.cos(alpha - Math.PI / 3) / 3,
+                    y: p3.y + l * Math.sin(alpha - Math.PI / 3) / 3
+                };
+                let p5 = {
+                    x: p1.x + 2 * l * Math.cos(alpha) / 3,
+                    y: p1.y + 2 * l * Math.sin(alpha) / 3
+                };
+                drawKochSnowflake(p1, p3, n - 1);
+                drawKochSnowflake(p3, p4, n - 1);
+                drawKochSnowflake(p4, p5, n - 1);
+                drawKochSnowflake(p5, p2, n - 1);
             }
-            
-
         }
 
-		function run () {
-            var canvas = document.getElementById("canvas");
-            context = canvas.getContext('2d');
-            context.lineWidth = "2";
-			context.strokeStyle = "black";
-
-            var a={x:200,y:200};
-            var b={x:500,y:200};
-            var c={x:350,y:400};
-            var n=5;
-
-            drawKochSnowflake(a,b,n);
-			drawKochSnowflake(b,c,n);
-            drawKochSnowflake(c,a,n);
-		}
-	</script>
-
+        function run() {
+            let a = {x: 200, y: 200};
+            let b = {x: 500, y: 200};
+            let c = {x: 350, y: 400};
+            let n = 5;
+            drawKochSnowflake(a, b, n);
+            drawKochSnowflake(b, c, n);
+            drawKochSnowflake(c, a, n);
+        }
+    </script>
 <body onload="run()">
-  <canvas height='600' width='600' id='canvas'></canvas>
+<canvas height='600' width='600' id='canvas'></canvas>
 </body>
 </html>
