@@ -1,9 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="Cache-Control" content="no-cache"/>
-	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+
 	<script>
 		//пример рисования произвольного множества точек
 		function example1() {
@@ -11,10 +12,10 @@
 			var canvas = document.getElementById("canvas1");
 			var canvasHeight = parseInt(canvas.getAttribute("height"));
 			var canvasWidth = parseInt(canvas.getAttribute("width"));
-			
+
 			//создаем 2d context
 			var context = canvas.getContext('2d');
-			
+
 			//создаем "буфер" imageData, в который будем класть новую информацию о цветах
 			var imageData = context.createImageData(canvasWidth, canvasHeight);
 			for (var i = 0; i < canvasWidth; i++) {
@@ -27,33 +28,33 @@
 					if (j % 20 == 0)
 						green = 150;
 					var opacity = 255;
-					
-					imageData.data[4*(i + canvasWidth*j) + 0] = red;
-					imageData.data[4*(i + canvasWidth*j) + 1] = green;
-					imageData.data[4*(i + canvasWidth*j) + 2] = blue;
-					imageData.data[4*(i + canvasWidth*j) + 3] = opacity;
+
+					imageData.data[4 * (i + canvasWidth * j) + 0] = red;
+					imageData.data[4 * (i + canvasWidth * j) + 1] = green;
+					imageData.data[4 * (i + canvasWidth * j) + 2] = blue;
+					imageData.data[4 * (i + canvasWidth * j) + 3] = opacity;
 				}
 			}
 			//заполненный "буфер" imageData передаем в context для вывода на экран
 			context.putImageData(imageData, 0, 0);
 		}
-		
+
 		//пример рисования отдельных линий
 		function example2() {
 			//получаем html-элемент типа canvas и его характеристики
 			var canvas = document.getElementById("canvas2");
 			var canvasHeight = parseInt(canvas.getAttribute("height"));
 			var canvasWidth = parseInt(canvas.getAttribute("width"));
-			
+
 			//создаем 2d context
 			var context = canvas.getContext('2d');
-			
+
 			//задаем стиль линий
 			context.lineWidth = "5";
 			context.strokeStyle = "green";
-			
+
 			//начинаем создание нового пути
-			context.beginPath(); 
+			context.beginPath();
 			//задаем начальную точку линии
 			context.moveTo(0, 75);
 			//задаем конечную точку линии и добавляем линию в путь
@@ -61,50 +62,110 @@
 			//выводим путь на экран
 			context.stroke();
 		}
-		
+
 		//пример рисования полилиний (сначала вычисляем точки, затем рисуем)
 		function example3() {
 			//получаем html-элемент типа canvas и его характеристики
 			var canvas = document.getElementById("canvas3");
 			var canvasHeight = parseInt(canvas.getAttribute("height"));
 			var canvasWidth = parseInt(canvas.getAttribute("width"));
-			
+
 			//создаем 2d context
 			var context = canvas.getContext('2d');
-			
-			//задаем стиль линий
+
 			context.lineWidth = "2";
 			context.strokeStyle = "#FF0000";
+
+			var points = [{ x: 20, y: 50 }, { x: 120, y: 50 }, { x: 120, y: 100 }, { x: 50, y: 20 }];
 			
-			//создаем массив точек
-			//в качестве точек используются анонимные объекты со свойствами x и y
-			var points = [{x: 20, y: 50}, {x: 120, y: 50}, {x: 120, y: 100}, {x: 50, y: 20}];
-			
-			//начинаем создание нового пути
-			context.beginPath(); 
-			//добавляем в путь все точки из массива
+			context.beginPath();
 			for (var i = 0; i < points.length; i++) {
 				var point = points[i];
-			    if (i == 0)
+				if (i == 0)
 					context.moveTo(point.x, point.y);
 				else
 					context.lineTo(point.x, point.y);
 			}
-			//выводим путь на экран
 			context.stroke();
 		}
-		
+
+		function KochSnowflake() {
+			var canvas = document.getElementById("canvas4");
+			
+			var points = [];
+			var input = prompt('введите координаты 3-х точек ( не больше 200 (50 140 190 140 120 19)):', ).split(' ');
+			var count = prompt(' введите глубину рекурсии :', );
+			for (var i = 0; i < (input.length / 2); i++) {
+				points[i] = {
+					x: input[i + i],
+					y: input[i + i + 1]
+				}
+			}
+			
+			function rand(count) {
+				return Math.floor(count * Math.random());
+			}
+			
+			var deg = Math.PI / 180;
+			var context = canvas.getContext('2d');
+			var angle = 0;
+			var strokes = ["#6cf", "#9cf", "#99f", "#ccf", "#66f", "#3cf", "#ff33cc", "#ff3366", "#33ff66"];
+			var stroke = strokes[rand(strokes.length)];
+			var fill = 'transparent';
+			var length = Math.sqrt((points[0].x - points[1].x)*(points[0].x - points[1].x) + (points[0].y - points[1].y)*(points[0].y - points[1].y));
+			
+			function drawLine(count, length) {
+				context.save();      
+				if (count == 0) {      
+					context.lineTo(length, 0);
+				}
+				else {
+					context.scale(1 / 3, 1 / 3); 
+					drawLine(count - 1, length); 
+					context.rotate(60 * deg);
+					drawLine(count - 1, length); 
+					context.rotate(-120 * deg);
+					drawLine(count - 1, length); 
+					context.rotate(60 * deg); 
+					drawLine(count - 1, length);
+				}
+				context.restore();   
+				context.translate(length, 0);
+			}
+			
+			context.save(); 
+			context.strokeStyle = stroke;
+			context.fillStyle = fill;
+			
+			context.beginPath();
+			context.translate(points[0].x, points[0].y);
+			drawLine(count, length);
+			context.rotate(-120 * deg);
+			drawLine(count, length); 
+			context.rotate(-120 * deg);
+			drawLine(count, length);
+			context.closePath();
+			
+			context.fill();
+			context.stroke();
+			context.restore();
+		}
+
 		//вызывается после загрузки body
-		function run () {
+		function run() {
 			example1();
 			example2();
 			example3();
+			
+			KochSnowflake();
 		}
 	</script>
 
-<body onload="run()">
-  <canvas height='200' width='200' id='canvas1'></canvas>
-  <canvas height='200' width='200' id='canvas2'></canvas>
-  <canvas height='200' width='200' id='canvas3'></canvas>
-</body>
+	<body onload="run()">
+		<canvas height='200' width='200' id='canvas1'></canvas>
+		<canvas height='200' width='200' id='canvas2'></canvas>
+		<canvas height='200' width='200' id='canvas3'></canvas>
+		<canvas height='200' width='200' id='canvas4'></canvas>
+	</body>
+
 </html>
