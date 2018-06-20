@@ -73,17 +73,12 @@
 			//создаем 2d context
 			var context = canvas.getContext('2d');
 
-			//задаем стиль линий
 			context.lineWidth = "2";
 			context.strokeStyle = "#FF0000";
 
-			//создаем массив точек
-			//в качестве точек используются анонимные объекты со свойствами x и y
 			var points = [{ x: 20, y: 50 }, { x: 120, y: 50 }, { x: 120, y: 100 }, { x: 50, y: 20 }];
-
-			//начинаем создание нового пути
+			
 			context.beginPath();
-			//добавляем в путь все точки из массива
 			for (var i = 0; i < points.length; i++) {
 				var point = points[i];
 				if (i == 0)
@@ -91,13 +86,12 @@
 				else
 					context.lineTo(point.x, point.y);
 			}
-			//выводим путь на экран
 			context.stroke();
 		}
 
-		//снежинка Коха
 		function KochSnowflake() {
 			var canvas = document.getElementById("canvas4");
+			
 			var points = [];
 			var input = prompt('введите координаты 3-х точек ( не больше 200 (50 140 190 140 120 19)):', ).split(' ');
 			var count = prompt(' введите глубину рекурсии :', );
@@ -107,40 +101,51 @@
 					y: input[i + i + 1]
 				}
 			}
+			
 			function rand(count) {
 				return Math.floor(count * Math.random());
 			}
+			
 			var deg = Math.PI / 180;
 			var context = canvas.getContext('2d');
 			var angle = 0;
 			var strokes = ["#6cf", "#9cf", "#99f", "#ccf", "#66f", "#3cf", "#ff33cc", "#ff3366", "#33ff66"];
 			var stroke = strokes[rand(strokes.length)];
 			var fill = 'transparent';
-			var length = Math.sqrt(Math.pow((points[0].x - points[1].x), 2) + Math.pow((points[0].y - points[1].y), 2));
+			var length = Math.sqrt((points[0].x - points[1].x)*(points[0].x - points[1].x) + (points[0].y - points[1].y)*(points[0].y - points[1].y));
+			
 			function drawLine(count, length) {
-				context.save();       // Сохраняем текущую трансформацию 
-				if (count == 0) {      // Нерекурсивный случай - отрисовываем линию 
+				context.save();      
+				if (count == 0) {      
 					context.lineTo(length, 0);
 				}
 				else {
-					context.scale(1 / 3, 1 / 3);  // Уменьшаем масштаб в 3 раза 
-					drawLine(count - 1, length); context.rotate(60 * deg);
-					drawLine(count - 1, length); context.rotate(-120 * deg);
-					drawLine(count - 1, length); context.rotate(60 * deg); drawLine(count - 1, length);
+					context.scale(1 / 3, 1 / 3); 
+					drawLine(count - 1, length); 
+					context.rotate(60 * deg);
+					drawLine(count - 1, length); 
+					context.rotate(-120 * deg);
+					drawLine(count - 1, length); 
+					context.rotate(60 * deg); 
+					drawLine(count - 1, length);
 				}
-				context.restore();      // Восстанавливаем трансформацию 
-				context.translate(length, 0); // переходим в конец ребра 
-
-
+				context.restore();   
+				context.translate(length, 0);
 			}
-			context.save(); context.strokeStyle = stroke;
+			
+			context.save(); 
+			context.strokeStyle = stroke;
 			context.fillStyle = fill;
+			
 			context.beginPath();
 			context.translate(points[0].x, points[0].y);
 			drawLine(count, length);
 			context.rotate(-120 * deg);
-			drawLine(count, length); context.rotate(-120 * deg);
-			drawLine(count, length); context.closePath();
+			drawLine(count, length); 
+			context.rotate(-120 * deg);
+			drawLine(count, length);
+			context.closePath();
+			
 			context.fill();
 			context.stroke();
 			context.restore();
@@ -151,6 +156,7 @@
 			example1();
 			example2();
 			example3();
+			
 			KochSnowflake();
 		}
 	</script>
