@@ -6,6 +6,7 @@
     var width = canvas.width = 420;
     var height = canvas.height = 420;
 
+    var startingPoints = {
         p1: {
             x: 0,
             y: -150
